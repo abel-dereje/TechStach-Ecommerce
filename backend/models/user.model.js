@@ -14,6 +14,7 @@ const userSchema = mongoose.Schema({
     },
     email: {
         type: String,
+        unique : true,
         required: [true, 'Please enter an email'],
     },
     phone: {
@@ -23,6 +24,9 @@ const userSchema = mongoose.Schema({
     password: {
         type: String,
         required: [true, 'Please enter a password'],
+    },
+    profilePic: {
+        type: String,
     },
     role: {
         type: String,
