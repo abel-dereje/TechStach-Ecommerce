@@ -4,6 +4,10 @@ import Home from '../Pages/Home'
 import Login from '../Pages/Login'
 import ForgotPassword from '../Pages/ForgotPassword'
 import SignUp from '../Pages/SignUp'
+import AdminPanel from '../Pages/AdminPanel'
+import User from '../Pages/User'
+import AddProduct from '../Pages/AddProduct'
+import Products from '../Pages/Products'
 
 
 const router = createBrowserRouter([
@@ -26,6 +30,25 @@ const router = createBrowserRouter([
             {
                 path : "/sign-up" ,
                 element : <SignUp/>
+            }
+            ,
+            {
+                path : "/admin-page" ,
+                element : <AdminPanel/>
+            },
+            {
+                path : "/add-product" ,
+                element : <AddProduct/>
+            }
+            ,
+            {
+                path : "/products" ,
+                element : <Products/>
+            }
+            ,
+            {
+                path : "/users" ,
+                element : <User/>
             }
         ]
     }

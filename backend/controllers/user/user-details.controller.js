@@ -2,6 +2,13 @@ const userModel = require("../../models/user.model");
 
 const userDetails = async(req,res) => {
     try{
+        if (!req.userId) {
+            return res.status(400).json({
+                error: true,
+                success: false,
+                message: "User ID is missing"
+            });
+        }
         console.log("userId",req.userId)
         const user = await userModel.findById(req.userId)
 

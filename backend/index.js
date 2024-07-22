@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors')
-//const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser')
 
 require('dotenv').config();
 const db_connect = require('./config/db');
@@ -14,8 +15,9 @@ app.use(cors({
     origin : process.env.FRONTEND_URL,
     credentials : true
 }))
+app.use(cookieParser());
 app.use(express.json())
-// app.use(cookieParser())
+app.use(bodyParser.json());
 
 app.use("/api",routers)
 
