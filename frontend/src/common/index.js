@@ -14,8 +14,8 @@ const SummaryApi = {
         method : "get"
     },
     logout_user : {
-        url : `${backendDomin}/api/userLogout`,
-        method : 'get'
+        url : `${backendDomin}/api/logout`,
+        method : 'post'
     },
     allUser : {
         url : `${backendDomin}/api/all-user`,
@@ -28,6 +28,11 @@ const SummaryApi = {
     uploadProduct : {
         url : `${backendDomin}/api/upload-product`,
         method : "post"
+    }
+    ,
+    getProducts : {
+        url : `${backendDomin}/api/get-product`,
+        method : "get"
     }
 }
 

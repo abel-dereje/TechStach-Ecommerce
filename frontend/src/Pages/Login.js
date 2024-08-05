@@ -1,151 +1,147 @@
-import React, { useState } from 'react'
-import { Link,useNavigate } from "react-router-dom";
-
-import loginIcons from "../assest/signin.gif";
+import React, { useState, useCallback } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import SummaryApi from '../common';
-import { toast } from 'react-toastify';
-
+import SummaryApi from "../common";
+import { toast } from "react-toastify";
+import { setUserDetails } from "../store/userSlice";
+import loginIcons from "../assets/signin.gif";
 
 const Login = () => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [showPassword,setShowPassword] = useState(false)
-  const [data,setData] = useState({
-      email : "",
-      password : ""
-  })
-  const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false);
+  const [data, setData] = useState({ email: "", password: "" });
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleOnChange = (e) =>{
-      const { name , value } = e.target
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    setData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-      setData((preve)=>{
-          return{
-              ...preve,
-              [name] : value
-          }
-      })
-  }
-
-
-  const handleSubmit = async(e) =>{
-      e.preventDefault()
-
-      const dataResponse = await fetch(SummaryApi.signIn.url,{
-          method : SummaryApi.signIn.method,
-          credentials : 'include',
-          headers : {
-              "content-type" : "application/json"
+  const handleLogin = useCallback(
+    async (credentials) => {
+      try {
+        const response = await fetch(SummaryApi.signIn.url, {
+          method: SummaryApi.signIn.method,
+          headers: {
+            "Content-Type": "application/json",
           },
-          body : JSON.stringify(data)
-      })
+          body: JSON.stringify(credentials),
+        });
 
-      const dataApi = await dataResponse.json()
+        const result = await response.json();
 
-      if(dataApi.success){
-          toast.success(dataApi.message)
-          navigate('/')
+        console.log("API Response:", result); // Log the response to check its structure
+
+        if (result.success) {
+          toast.success(result.message);
+
+          if (result.token && result.user) {
+            localStorage.setItem("token", result.token);
+            localStorage.setItem("userDetails", JSON.stringify(result.user));
+            console.log("Stored Token:", localStorage.getItem("token")); // Check if token is stored
+            console.log(
+              "Stored User Details:",
+              localStorage.getItem("userDetails")
+            );
+            dispatch(setUserDetails(result.user));
+            navigate("/");
+          } else {
+            toast.error("Token or user details are missing in the response.");
+          }
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        toast.error("Login failed. Please try again.");
       }
-
-      if(dataApi.error){
-          toast.error(dataApi.message)
-      }
-
-  }
-  
-
-
-  const styles = {
-    default: {
-      padding: "10px",
-      borderRadius: "5px",
-      transition: "background-color 0.3s ease",
-      color: "black",
     },
-    hover: {
-      color: "#009FBD",
-      cursor: "pointer",
-    },
-    
+    [dispatch, navigate]
+  );
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleLogin(data);
   };
 
   return (
-    <section id="login">
-      <div className="mx-auto container p-4">
-        <div className="bg-white p-5 w-full max-w-sm mx-auto">
-          <div className="w-20 h-20 mx-auto" >
-            <img
-              src={loginIcons}
-              alt="login icons"
-            />
-          </div>
-
-          <form className="pt-6 flex flex-col gap-2" onSubmit={handleSubmit}>
-            <div className="grid">
-              <label>Email: </label>
-              <div className="bg-slate-100 p-2">
-                <input
-                  type="email"
-                  value={data.email}
-                  name='email'
-                  onChange={handleOnChange}
-                  placeholder="enter email address"
-                  className="w-full h-full outline-none bg-transparent"
-                />
-              </div>
-            </div>
-            <div className="grid">
-              <label>Password: </label>
-              <div className="bg-slate-100 p-2 flex">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={data.password}
-                  name='password'
-                  onChange={handleOnChange}
-                  placeholder="enter password"
-                  className="w-full h-full outline-none bg-transparent"
-                />
-                <div
-                  className="cursor-pointer text-xl"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                >
-                  <span>{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
-                </div>
-              </div>
-              <Link
-                to="/forgot-password"
-                className="block w-fit ml-auto hover:underline hover:text-red-600"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-                style={isHovered ? { ...styles.default, ...styles.hover } : styles.default}
-              >
-                Forgot password?
-              </Link>
-            </div>
-            <button
-              style={{
-                backgroundColor: "#009FBD",
-                transition: "background-color 0.3s",
-              }}
-              className="bg--600 hover:bg-red-700 text-white px-6 py-2 w-full max-w-[150px] rounded-full hover:scale-110 transition-all mx-auto block mt-6"
-            >
-              Login
-            </button>
-          </form>
-          <p className="my-5">
-            Don't have an account?{" "}
-            <Link
-              to="/sign-up"
-              style={{
-                color: "#009FBD",
-                transition: "background-color 0.3s",
-              }}
-              className="text-red-600 hover:text-red-700 hover:underline"
-            >
-              Sign up
-            </Link>
-          </p>
+    <section className="p-3 md:p-4">
+      <div className="w-full max-w-sm bg-white m-auto flex items-center flex-col p-4 rounded-lg shadow-lg">
+        <div className="w-20 h-20 overflow-hidden rounded-full drop-shadow-md shadow-md">
+          <img src={loginIcons} className="w-full h-full" alt="login" />
         </div>
+        <h2 className="text-center text-2xl font-bold text-[#009FBD] mb-8">
+          Login
+        </h2>
+        <form onSubmit={handleSubmit} className="flex flex-col">
+          <label htmlFor="email" className="text-gray-600 font-semibold mb-2">
+            Email
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            value={data.email}
+            onChange={handleOnChange}
+            className="border-2 p-2 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-[#009FBD]"
+            required
+          />
+          <label
+            htmlFor="password"
+            className="text-gray-600 font-semibold mb-2"
+          >
+            Password
+          </label>
+          <div className="relative">
+            <input
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              value={data.password}
+              onChange={handleOnChange}
+              className="border-2 p-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-[#009FBD]"
+              required
+            />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-2 top-3 cursor-pointer text-gray-500"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+          <div className="flex justify-end mt-2">
+            <Link
+              to="/forgot-password"
+              className="block w-fit ml-auto hover:underline hover:text-red-600"
+            >
+              Forgot password?
+            </Link>
+          </div>
+          <button
+            type="submit"
+            style={{
+              backgroundColor: "#009FBD",
+              transition: "background-color 0.3s",
+            }}
+            className="bg-[#009FBD] hover:bg-red-700 text-white px-6 py-2 w-full max-w-[150px] rounded-full hover:scale-110 transition-all mx-auto block mt-6"
+          >
+            Login
+          </button>
+        </form>
+        <p className="my-5">
+          Don't have an account?{" "}
+          <Link
+            to="/sign-up"
+            style={{ color: "#009FBD", transition: "background-color 0.3s" }}
+            className="text-red-600 hover:text-red-700 hover:underline"
+          >
+            Sign up
+          </Link>
+        </p>
       </div>
     </section>
   );

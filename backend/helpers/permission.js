@@ -6,7 +6,6 @@ const uploadProductPermission = async(userId) => {
     if(user.role === 'admin'){
         return true
     }
-
     return false
 }
 

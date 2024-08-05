@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import loginIcons from "../assest/signin.gif";
+import loginIcons from "../assets/signin.gif";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import imageTobase64 from "../helpers/imageToBase64";
 import SummaryApi from "../common";
 
@@ -66,8 +66,8 @@ const SignUp = () => {
           toast.success(result.message);
           navigate("/login");
         } else if (result.error) {
-            toast.error("User already registered.");
-            toast.error(result.message);
+          toast.error("User already registered.");
+          toast.error(result.message);
         }
       } catch (error) {
         toast.error("An error occurred. Please try again.");
@@ -78,146 +78,151 @@ const SignUp = () => {
   };
 
   return (
-    <section id="signup">
-      <div className="mx-auto container p-4">
-        <div className="bg-white p-5 w-full max-w-sm mx-auto">
-          <div className="w-20 h-20 mx-auto relative overflow-hidden rounded-full">
-            <div>
-              <img src={data.profilePic || loginIcons} alt="login icons" />
-            </div>
-            <form>
-              <label>
-                <div className="text-xs bg-opacity-80 bg-slate-200 pb-4 pt-2 cursor-pointer text-center absolute bottom-0 w-full">
-                  Upload Photo
-                </div>
-                <input type="file" className="hidden" onChange={handleUploadPic} />
-              </label>
-            </form>
-          </div>
-
-          <form className="pt-6 flex flex-col gap-2" onSubmit={handleSubmit}>
-            <div className="grid">
-              <label>First name: </label>
-              <div className="bg-slate-100 p-2">
-                <input
-                  type="text"
-                  name="firstName"
-                  value={data.firstName}
-                  onChange={handleOnChange}
-                  placeholder="enter first name"
-                  required
-                  className="w-full h-full outline-none bg-transparent"
-                />
+    <section className="p-3 md:p-4">
+      <div className="w-full max-w-md bg-white m-auto flex items-center flex-col p-4 rounded-lg shadow-lg">
+        <div className="w-20 h-20 overflow-hidden rounded-full drop-shadow-md shadow-md">
+          <img src={loginIcons} className="w-full h-full" alt="login" />
+          <form>
+            <label>
+              <div className="text-xs bg-opacity-80 bg-slate-200 pb-4 pt-2 cursor-pointer text-center absolute bottom-0 w-full">
+                Upload Photo
               </div>
-              <div className="grid">
-                <label>Last name: </label>
-                <div className="bg-slate-100 p-2">
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={data.lastName}
-                    onChange={handleOnChange}
-                    placeholder="enter last name"
-                    required
-                    className="w-full h-full outline-none bg-transparent"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="grid">
-              <label>Email: </label>
-              <div className="bg-slate-100 p-2">
-                <input
-                  type="email"
-                  name="email"
-                  value={data.email}
-                  onChange={handleOnChange}
-                  placeholder="enter email address"
-                  required
-                  className="w-full h-full outline-none bg-transparent"
-                />
-              </div>
-            </div>
-            <div className="grid">
-              <label>Phone: </label>
-              <div className="bg-slate-100 p-2">
-                <input
-                  type="text"
-                  name="phone"
-                  value={data.phone}
-                  onChange={handleOnChange}
-                  placeholder="enter phone number"
-                  required
-                  className="w-full h-full outline-none bg-transparent"
-                />
-              </div>
-            </div>
-            <div className="grid">
-              <label>Password: </label>
-              <div className="bg-slate-100 p-2 flex">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={data.password}
-                  name="password"
-                  onChange={handleOnChange}
-                  placeholder="enter password"
-                  required
-                  className="w-full h-full outline-none bg-transparent"
-                />
-                <div
-                  className="cursor-pointer text-xl"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                >
-                  <span>{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
-                </div>
-              </div>
-              <div className="grid">
-                <label>Confirm password: </label>
-                <div className="bg-slate-100 p-2 flex">
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    value={data.confirmPassword}
-                    name="confirmPassword"
-                    onChange={handleOnChange}
-                    placeholder="enter confirm password"
-                    required
-                    className="w-full h-full outline-none bg-transparent"
-                  />
-                  <div
-                    className="cursor-pointer text-xl"
-                    onClick={() => setShowConfirmPassword((prev) => !prev)}
-                  >
-                    <span>
-                      {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <button
-              style={{
-                backgroundColor: "#009FBD",
-                transition: "background-color 0.3s",
-              }}
-              className="bg--600 hover:bg-red-700 text-white px-6 py-2 w-full max-w-[150px] rounded-full hover:scale-110 transition-all mx-auto block mt-6"
-            >
-              Sign up
-            </button>
+              <input
+                type="file"
+                className="hidden"
+                onChange={handleUploadPic}
+              />
+            </label>
           </form>
-          <p className="my-5">
-            Already have account?{" "}
-            <Link
-              to="/login"
-              style={{
-                color: "#009FBD",
-                transition: "background-color 0.3s",
-              }}
-              className="text-red-600 hover:text-red-700 hover:underline"
-            >
-              Login
-            </Link>
-          </p>
         </div>
+        <h2 className="text-center text-2xl font-bold text-[#009FBD] mb-8">
+          Sign up
+        </h2>
+        <form onSubmit={handleSubmit} className="flex flex-col">
+          <label htmlFor="fName" className="text-gray-600 font-semibold mb-2">
+            First name
+          </label>
+          <input
+            type="text"
+            name="firstName"
+            value={data.firstName}
+            onChange={handleOnChange}
+            placeholder="enter first name"
+            className="border-2 p-2 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-[#009FBD]"
+          />
+          <label htmlFor="fName" className="text-gray-600 font-semibold mb-2">
+            Last name
+          </label>
+          <input
+            type="text"
+            name="lastName"
+            value={data.lastName}
+            onChange={handleOnChange}
+            placeholder="enter last name"
+            className="border-2 p-2 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-[#009FBD]"
+          />
+
+          <label htmlFor="email" className="text-gray-600 font-semibold mb-2">
+            Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            value={data.email}
+            onChange={handleOnChange}
+            placeholder="enter email address"
+            required
+            className="border-2 p-2 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-[#009FBD]"
+          />
+
+          <label htmlFor="fName" className="text-gray-600 font-semibold mb-2">
+            Phone
+          </label>
+          <input
+            type="text"
+            name="phone"
+            value={data.phone}
+            onChange={handleOnChange}
+            placeholder="enter phone number"
+            required
+            className="border-2 p-2 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-[#009FBD]"
+          />
+
+          <label
+            htmlFor="password"
+            className="text-gray-600 font-semibold mb-2"
+          >
+            Password
+          </label>
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              value={data.password}
+              name="password"
+              onChange={handleOnChange}
+              placeholder="enter password"
+              required
+              className="border-2 p-2 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-[#009FBD]"
+            />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-2 top-3 cursor-pointer text-gray-500"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+          <label
+            htmlFor="confirmPassword"
+            className="text-gray-600 font-semibold mb-2"
+          >
+            Confirm Password
+          </label>
+          <div className="relative mb-4">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              value={data.confirmPassword}
+              name="confirmPassword"
+              onChange={handleOnChange}
+              placeholder="confirm password"
+              required
+              className="border-2 p-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-[#009FBD]"
+            />
+            <span
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+            >
+              {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+          <div className="flex justify-end mt-2">
+            <Link
+              to="/forgot-password"
+              className="block w-fit ml-auto hover:underline hover:text-red-600"
+            >
+              Forgot password?
+            </Link>
+          </div>
+          <button
+            type="submit"
+            style={{
+              backgroundColor: "#009FBD",
+              transition: "background-color 0.3s",
+            }}
+            className="bg-[#009FBD] hover:bg-red-700 text-white px-6 py-2 w-full max-w-[150px] rounded-full hover:scale-110 transition-all mx-auto block mt-6"
+          >
+            Sign up
+          </button>
+        </form>
+        <p className="my-5">
+          Already have account?{" "}
+          <Link
+            to="/login"
+            style={{ color: "#009FBD", transition: "background-color 0.3s" }}
+            className="text-red-600 hover:text-red-700 hover:underline"
+          >
+            Login
+          </Link>
+        </p>
       </div>
     </section>
   );

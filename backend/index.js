@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 require('dotenv').config();
 const db_connect = require('./config/db');
 const routers = require('./routes/routers.route');
+// const authToken = require('./middleware/authToken');
 
 
 db_connect();
@@ -15,9 +16,12 @@ app.use(cors({
     origin : process.env.FRONTEND_URL,
     credentials : true
 }))
-app.use(cookieParser());
+
 app.use(express.json())
+app.use(cookieParser());
 app.use(bodyParser.json());
+// app.use(authToken);
+
 
 app.use("/api",routers)
 
