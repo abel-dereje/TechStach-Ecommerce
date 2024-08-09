@@ -33,6 +33,14 @@ const SummaryApi = {
     getProducts : {
         url : `${backendDomin}/api/get-product`,
         method : "get"
+    },
+    productDetails : {
+        url : `${backendDomin}/api/product-details`,
+        method : "post"
+    },
+    categoryProduct : {
+        url : `${backendDomin}/api/get-categoryProduct`,
+        method : 'get'
     }
 }
 
