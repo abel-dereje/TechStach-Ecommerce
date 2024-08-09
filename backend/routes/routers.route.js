@@ -30,7 +30,7 @@ router.put("/update-user",authToken,updateUser)
 //product
 router.post("/upload-product",authToken,UploadProduct)
 router.get("/get-product",getProduct)
-router.post("/update-product",authToken,UploadProduct)
+router.put("/update-product",authToken,UploadProduct)
 router.get("/get-categoryProduct",getCategoryProduct)
 router.post("/category-product",getCategoryWiseProduct)
 router.post("/product-details",getProductDetails)
