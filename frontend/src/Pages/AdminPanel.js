@@ -17,7 +17,7 @@ const AdminPanel = () => {
             </a>
           </li>
           <li>
-            <a href="#users" className="block py-2 px-4 rounded-lg hover:bg-white hover:text-[#009FBD]">
+            <a href="/users" className="block py-2 px-4 rounded-lg hover:bg-white hover:text-[#009FBD]">
               <FontAwesomeIcon icon={faUsers} className="mr-2" />
               Users
             </a>
