@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SummaryApi from '../common';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import displayINRCurrency from '../helpers/displayCurrency';
+import displayCurrency from '../helpers/displayCurrency';
 
 const DifferentProducts = () => {
   const [trendingProducts, setTrendingProducts] = useState([]);
@@ -83,8 +83,8 @@ const DifferentProducts = () => {
               )}
               <div>
                 <p className="font-bold text-slate-600 hover:bg-white hover:text-[#009FBD]">{product.productName}</p>
-                <p className="text-sm line-through text-slate-600">{displayINRCurrency (159.99)}</p>
-                <p className="font-bold text-slate-600 hover:bg-white hover:text-[#009FBD]">{displayINRCurrency(product.price)}</p>
+                <p className="text-sm line-through text-slate-600">{displayCurrency (159.99)}</p>
+                <p className="font-bold text-slate-600 hover:bg-white hover:text-[#009FBD]">{displayCurrency(product.price)}</p>
               </div>
             </div>
           </Link>
