@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/user.model'); // Adjust the path as necessary
+const User = require('../models/user.model'); 
 
 const authToken = async (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Extract the token from the 'Bearer <token>' format
+    const token = authHeader && authHeader.split(' ')[1]; 
 
-    console.log('authHeader:', authHeader); // Log the auth header
-    console.log('Extracted token:', token); // Log the extracted token
+    console.log('authHeader:', authHeader); 
+    console.log('Extracted token:', token); 
 
     if (!token) {
       return res.status(401).json({
@@ -19,7 +19,7 @@ const authToken = async (req, res, next) => {
 
     jwt.verify(token, process.env.TOKEN_SECRET_KEY, (err, decoded) => {
       if (err) {
-        console.error('JWT verification error:', err); // Log the JWT error
+        console.error('JWT verification error:', err); 
         return res.status(401).json({
           message: 'Unauthorized',
           error: true,
