@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import fetchCategoryWiseProduct from '../helpers/fetchCategoryWiseProduct'
-import displayINRCurrency from '../helpers/displayCurrency'
+import displayCurrency from '../helpers/displayCurrency'
 // import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
 import addToCart from '../helpers/addToCart'
@@ -71,8 +71,8 @@ const CategoryWiseProductDisplay = ({category, heading}) => {
                                     <h2 className='font-medium text-base md:text-lg text-ellipsis line-clamp-1 text-black'>{product?.productName}</h2>
                                     <p className='capitalize text-slate-500'>{product?.category}</p>
                                     <div className='flex gap-3'>
-                                        <p className='text-[#009FBD] font-medium'>{ displayINRCurrency(product?.sellingPrice) }</p>
-                                        <p className='text-slate-500 line-through'>{ displayINRCurrency(product?.price)  }</p>
+                                        <p className='text-[#009FBD] font-medium'>{ displayCurrency(product?.sellingPrice) }</p>
+                                        <p className='text-slate-500 line-through'>{ displayCurrency(product?.price)  }</p>
                                     </div>
                                     <button className='text-sm bg-[#009FBD] hover:bg-[#41bdd5] text-white px-3 py-0.5 rounded-full' onClick={(e)=>handleAddToCart(e,product?._id)}>Add to Cart</button>
                                 </div>
