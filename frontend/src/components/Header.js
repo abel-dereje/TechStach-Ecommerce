@@ -1,5 +1,5 @@
-import React, { useEffect, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, {useState, useEffect, useContext, useCallback } from 'react';
+import {  Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaRegCircleUser } from 'react-icons/fa6';
 import { FaShoppingCart } from 'react-icons/fa';
@@ -8,12 +8,21 @@ import { toast } from 'react-toastify';
 import SummaryApi from "../common";
 import { setUserDetails, clearUserDetails } from '../store/userSlice';
 import Logo from "./Logo";
+import Context from "../context"
+
 
 const Header = () => {
   const logoColor = "#009FBD";
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
+  const context = useContext(Context);
+
+  const searchInput = useLocation()
+  const URLSearch = new URLSearchParams(searchInput?.search)
+  const searchQuery = URLSearch.getAll("q")
+  const [search,setSearch] = useState(searchQuery)
+
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -55,6 +64,17 @@ const Header = () => {
     }
   }, [dispatch, navigate]);
 
+  const handleSearch = (e)=>{
+    const { value } = e.target
+    setSearch(value)
+
+    if(value){
+      navigate(`/search?q=${value}`)
+    }else{
+      navigate("/search")
+    }
+  }
+
   return (
     <header className="bg-white shadow-md">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between py-4 px-4 md:px-8">
@@ -68,7 +88,7 @@ const Header = () => {
           <input
             type="text"
             placeholder="Search product here..."
-            className="w-full px-4 py-2 text-gray-700 placeholder-gray-400 outline-none"
+            className="w-full px-4 py-2 text-gray-700 placeholder-gray-400 outline-none"  onChange={handleSearch} value={search}
           />
           <button
             className="text-lg min-w-[50px] h-10 bg-[#009FBD] flex items-center justify-center rounded-r-full text-white"
@@ -89,12 +109,12 @@ const Header = () => {
             className="text-2xl relative cursor-pointer flex items-center justify-center"
           >
             <FaShoppingCart />
-            <div
+            <Link to ={ "/cart"} 
               style={{ backgroundColor: logoColor }}
               className="text-white w-5 h-5 rounded-full flex items-center justify-center absolute -top-2 -right-2"
             >
-              <p className="text-sm">0</p>
-            </div>
+              <p className="text-sm">{context?.cartProductCount}</p>
+            </Link>
           </div>
           <div>
             {user ? (
