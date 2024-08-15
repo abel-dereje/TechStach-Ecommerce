@@ -6,6 +6,7 @@ import displayCurrency from '../helpers/displayCurrency';
 import CategroyWiseProductDisplay from '../components/CategoryWiseProductDisplay';
 import addToCart from '../helpers/addToCart';
 import Context from '../context';
+import { toast } from 'react-toastify';
 
 const ProductDetails = () => {
   const { id } = useParams(); // Extract id from useParams
@@ -24,14 +25,16 @@ const ProductDetails = () => {
         return;
     }
 
-    console.log("Product ID:", id);  // Debugging: Log the product ID
+    console.log("Product ID:", id);
 
     setLoading(true);
     try {
+        const token = localStorage.getItem("token"); // Assuming token is stored in localStorage
         const response = await fetch(SummaryApi.productDetails.url, {
             method: SummaryApi.productDetails.method,
             headers: {
-                "content-type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}` // Pass the token here
             },
             body: JSON.stringify({ productId: id })
         });
@@ -46,12 +49,13 @@ const ProductDetails = () => {
         console.error("Error during fetch:", error);
     }
     setLoading(false);
-  };
+};
+
 
   useEffect(() => {
     console.log("Fetching product details for ID:", id);
     fetchProductDetails();
-  }, [id]); // Dependency array should be id
+  }, [id]);
 
   const handleMouseEnterProduct = (imageURL) => {
     setActiveImage(imageURL);
@@ -72,9 +76,16 @@ const ProductDetails = () => {
   };
 
   const handleAddToCart = async (e, id) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast('Please Login...!');
+      return;
+    }
+  
     await addToCart(e, id);
     fetchUserAddToCart();
   };
+  
 
   const handleBuyProduct = async (e, id) => {
     await addToCart(e, id);
