@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -6,12 +6,17 @@ import SummaryApi from "../common";
 import { toast } from "react-toastify";
 import { setUserDetails } from "../store/userSlice";
 import loginIcons from "../assets/signin.gif";
+import Context from '../context';
+
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+  const { fetchUserDetails, fetchUserAddToCart } = useContext(Context)
+
   const dispatch = useDispatch();
+
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -49,6 +54,8 @@ const Login = () => {
             );
             dispatch(setUserDetails(result.user));
             navigate("/");
+            fetchUserDetails()
+            fetchUserAddToCart()
           } else {
             toast.error("Token or user details are missing in the response.");
           }
