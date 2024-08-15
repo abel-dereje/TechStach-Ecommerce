@@ -1,51 +1,89 @@
-import React from 'react'; // Import useEffect here
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import { Outlet } from "react-router-dom";
+// import logo from './logo.svg';
 import './App.css';
-import { ToastContainer, toast } from 'react-toastify';
+import { Outlet } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useEffect, useState } from 'react';
 import SummaryApi from './common';
 import Context from './context';
 import { useDispatch } from 'react-redux';
 import { setUserDetails } from './store/userSlice';
 
 function App() {
-  const dispatch = useDispatch();
-  //const [cartProductCount,setCartProductCount] = useState(0)
+  const dispatch = useDispatch()
+  const [cartProductCount,setCartProductCount] = useState(0)
 
-  const fetchUserDetails = async () => {
+  const fetchUserDetails = async()=>{
+      const dataResponse = await fetch(SummaryApi.current_user.url,{
+        method : SummaryApi.current_user.method,
+        credentials : 'include'
+      })
+
+      const dataApi = await dataResponse.json()
+
+      if(dataApi.success){
+        dispatch(setUserDetails(dataApi.data))
+      }
+  }
+
+  const fetchUserAddToCart = async () => {
+    const token = localStorage.getItem('token');
+  
+    if (!token) {
+      console.error('User is not authenticated, please log in');
+      return;
+    }
+  
     try {
-      const response = await fetch(SummaryApi.current_user.url, {
-        method: SummaryApi.current_user.method,
+      const dataResponse = await fetch(SummaryApi.addToCartProductCount.url, {
+        method: SummaryApi.addToCartProductCount.method,
         credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`, // Include the token here
-        },
+          'Authorization': `Bearer ${token}`
+        }
       });
   
-      const data = await response.json();
+      if (!dataResponse.ok) {
+        throw new Error(`HTTP error! status: ${dataResponse.status}`);
+      }
   
-      if (data.success) {
-        dispatch(setUserDetails(data.data));
+      const dataApi = await dataResponse.json();
+      console.log('API Response:', dataApi);
+  
+      if (dataApi?.data?.count !== undefined) {
+        setCartProductCount(dataApi.data.count);
       } else {
-        toast.error(data.message);
+        console.error('Failed to fetch cart count:', dataApi.message || dataApi);
       }
     } catch (error) {
-      toast.error('Failed to fetch user details.');
+      console.error('Error fetching cart count:', error);
     }
   };
   
 
+  useEffect(()=>{
+    /**user Details */
+    fetchUserDetails()
+    /**user Details cart product */
+    fetchUserAddToCart()
+
+  },[])
   return (
     <>
-      <Context.Provider value={{ fetchUserDetails }}>
-        <ToastContainer position='top-center' />
-        <Header />
+      <Context.Provider value={{ cartProductCount, setCartProductCount, fetchUserDetails, fetchUserAddToCart }}>
+
+          
+        <ToastContainer 
+          position='top-center'
+        />
+        
+        <Header/>
         <main className='min-h-[calc(100vh-120px)] pt-16'>
-          <Outlet />
+          <Outlet/>
         </main>
-        <Footer />
+        <Footer/>
       </Context.Provider>
     </>
   );
