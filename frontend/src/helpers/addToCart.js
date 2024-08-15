@@ -1,35 +1,46 @@
 import SummaryApi from "../common"
 import { toast } from 'react-toastify'
 
-const addToCart = async(e,id) =>{
-    e?.stopPropagation()
-    e?.preventDefault()
-
-    const response = await fetch(SummaryApi.addToCartProduct.url,{
-        method : SummaryApi.addToCartProduct.method,
-        credentials : 'include',
-        headers : {
-            "content-type" : 'application/json'
+const addToCart = async (e, productId) => {
+    e.preventDefault();
+  
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast.error('Please log in to add products to the cart.');
+      return;
+    }
+  
+    try {
+      const response = await fetch(SummaryApi.addToCart.url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
-        body : JSON.stringify(
-            { productId : id }
-        )
-    })
-
-    const responseData = await response.json()
-
-    if(responseData.success){
-        toast.success(responseData.message)
+        body: JSON.stringify({ productId }),
+      });
+  
+      const data = await response.json();
+      
+      console.log("Response from backend:", data);
+  
+      if (response.ok) {
+        if (data.success) {
+          toast.success(data.message || 'Product added to cart!');
+        } else if (data.error && data.message === 'Already exists in Add to cart') {
+          toast.error(data.message || 'Product is already in your cart.');
+        }
+      } else {
+        toast.error(data.message || 'Error adding product to cart.');
+      }
+    } catch (error) {
+      toast.error('Something went wrong. Please try again later.');
+      console.error("Error in addToCart:", error);
     }
-
-    if(responseData.error){
-        toast.error(responseData.message)
-    }
-
-
-    return responseData
-
-}
+  };
+  
+  
+  
 
 
 export default addToCart
