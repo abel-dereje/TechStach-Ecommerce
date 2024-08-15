@@ -8,6 +8,7 @@ import ContentAreaFour from "./ContentAreaFour";
 import ContentAreaFive from "./ContentAreaFive";
 import ContentAreaSix from "./ContentAreaSix";
 import Advertisement from "./Advertisement";
+import VerticalCardProduct from "../components/VerticalCardProduct";
 
 
 const Home = () => {
@@ -31,6 +32,7 @@ const Home = () => {
           <ContentAreaFive />
           
           <ContentAreaSix />
+          {/* <VerticalCardProduct /> */}
         </div>
 
         {/* Advertisement */}
