@@ -2,30 +2,27 @@ const userModel = require("../../models/user.model");
 
 const updateUser = async (req, res) => {
     try {
-        const sessionUser = req.userId;
+        const userId = req.params.userId;
+        
+        const { firstName, lastName, email, phone, profilePic, role } = req.body;
 
-        const { userId, firstName, lastName, email, phone, role } = req.body;
+        console.log("Request Body:", req.body);
 
         const payload = {
             ...(firstName && { firstName }),
             ...(lastName && { lastName }),
             ...(email && { email }),
             ...(phone && { phone }),
+            ...(profilePic && { profilePic }),
             ...(role && { role }),
         };
 
-        // Ensure the user exists
-        const user = await userModel.findById(userId);
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found",
-                error: true,
-                success: false
-            });
-        }
+        console.log("Update Payload:", payload); // Debug: Log the payload to be updated
 
-        // Update the user
+        // Update the user without checking if they exist first
         const updatedUser = await userModel.findByIdAndUpdate(userId, payload, { new: true });
+
+        console.log("Updated User:", updatedUser); // Debug: Log the updated user
 
         res.json({
             data: updatedUser,
@@ -34,6 +31,7 @@ const updateUser = async (req, res) => {
             error: false
         });
     } catch (err) {
+        console.error("Update Error:", err); // Debug: Log the error
         res.status(400).json({
             message: err.message || err,
             error: true,

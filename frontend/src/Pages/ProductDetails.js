@@ -29,7 +29,7 @@ const ProductDetails = () => {
 
     setLoading(true);
     try {
-        const token = localStorage.getItem("token"); // Assuming token is stored in localStorage
+        const token = localStorage.getItem("token");
         const response = await fetch(SummaryApi.productDetails.url, {
             method: SummaryApi.productDetails.method,
             headers: {

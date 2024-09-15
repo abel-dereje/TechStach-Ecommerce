@@ -21,18 +21,33 @@ const SummaryApi = {
         url : `${backendDomin}/api/all-user`,
         method : 'get'
     },
+    singleUser : {
+        url : `${backendDomin}/api/single-user/:userId`,
+        method : 'get'
+    },
     updateUser : {
-        url : `${backendDomin}/api/update-user`,
-        method : "post"
+        url : `${backendDomin}/api/update-user/:userId`,
+        method : "put"
     },
     uploadProduct : {
         url : `${backendDomin}/api/upload-product`,
         method : "post"
-    }
-    ,
+    },
+    updateProduct : {
+        url : `${backendDomin}/api/update-product/:id`,
+        method : "put"
+    },
     getProducts : {
         url : `${backendDomin}/api/get-product`,
         method : "get"
+    },
+    getProductById : {
+        url : `${backendDomin}/api/getProductById/:id`,
+        method : "get"
+    },
+    categoryWiseProduct : {
+        url : `${backendDomin}/api/category-product`,
+        method : 'post'
     },
     productDetails : {
         url : `${backendDomin}/api/product-details`,
@@ -42,7 +57,7 @@ const SummaryApi = {
         url : `${backendDomin}/api/add-to-cart`,
         method : "post"
     },
-    addToCartProductCount : {
+    countAddToCartProduct : {
         url : `${backendDomin}/api/count-add-to-cart-product`,
         method : 'get'
     },
@@ -65,6 +80,10 @@ const SummaryApi = {
     categoryProduct : {
         url : `${backendDomin}/api/get-categoryProduct`,
         method : 'get'
+    },
+    filterProduct : {
+        url : `${backendDomin}/api/filter-product`,
+        method : 'post'
     }
 }
 

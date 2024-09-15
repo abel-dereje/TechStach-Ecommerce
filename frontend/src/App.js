@@ -1,4 +1,4 @@
-// import logo from './logo.svg';
+import logo from './logo.svg';
 import './App.css';
 import { Outlet } from 'react-router-dom';
 import Header from './components/Header';
@@ -29,39 +29,31 @@ function App() {
   }
 
   const fetchUserAddToCart = async () => {
-    const token = localStorage.getItem('token');
-  
-    if (!token) {
-      console.error('User is not authenticated, please log in');
-      return;
-    }
-  
     try {
-      const dataResponse = await fetch(SummaryApi.addToCartProductCount.url, {
-        method: SummaryApi.addToCartProductCount.method,
-        credentials: 'include',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-  
-      if (!dataResponse.ok) {
-        throw new Error(`HTTP error! status: ${dataResponse.status}`);
-      }
-  
-      const dataApi = await dataResponse.json();
-      console.log('API Response:', dataApi);
-  
-      if (dataApi?.data?.count !== undefined) {
-        setCartProductCount(dataApi.data.count);
-      } else {
-        console.error('Failed to fetch cart count:', dataApi.message || dataApi);
-      }
-    } catch (error) {
-      console.error('Error fetching cart count:', error);
+        const token = localStorage.getItem('token');
+        const dataResponse = await fetch(SummaryApi.countAddToCartProduct.url, {
+            method: SummaryApi.countAddToCartProduct.method,
+            credentials: 'include',
+            headers: {
+        'Authorization': `Bearer ${token}`
     }
-  };
-  
+        });
+
+        const dataApi = await dataResponse.json();
+        console.log("Cart Product Count API Response:", dataApi);
+
+        if (dataApi.success && dataApi?.data?.count !== undefined) {
+            setCartProductCount(dataApi.data.count);
+        } else {
+            console.error("Failed to fetch cart count or count is undefined:", dataApi.message || dataApi);
+            setCartProductCount(0); // Set to 0 if the count is undefined or the API call fails
+        }
+    } catch (error) {
+        console.error("Error fetching cart count:", error);
+        setCartProductCount(0); // Set to 0 in case of an error
+    }
+};
+
 
   useEffect(()=>{
     /**user Details */
@@ -72,12 +64,12 @@ function App() {
   },[])
   return (
     <>
-      <Context.Provider value={{ cartProductCount, setCartProductCount, fetchUserDetails, fetchUserAddToCart }}>
-
-          
-        <ToastContainer 
-          position='top-center'
-        />
+      <Context.Provider value={{
+          fetchUserDetails,
+          cartProductCount, 
+          fetchUserAddToCart
+      }}>
+        <ToastContainer position='top-center' />
         
         <Header/>
         <main className='min-h-[calc(100vh-120px)] pt-16'>

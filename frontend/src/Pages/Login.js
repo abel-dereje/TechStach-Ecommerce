@@ -8,15 +8,12 @@ import { setUserDetails } from "../store/userSlice";
 import loginIcons from "../assets/signin.gif";
 import Context from '../context';
 
-
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
-  const { fetchUserDetails, fetchUserAddToCart } = useContext(Context)
-
+  const { fetchUserDetails, fetchUserAddToCart } = useContext(Context);
   const dispatch = useDispatch();
-
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -26,49 +23,55 @@ const Login = () => {
     }));
   };
 
-  const handleLogin = useCallback(
-    async (credentials) => {
-      try {
-        const response = await fetch(SummaryApi.signIn.url, {
-          method: SummaryApi.signIn.method,
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(credentials),
-        });
-
-        const result = await response.json();
-
-        console.log("API Response:", result); // Log the response to check its structure
-
-        if (result.success) {
+  const handleLogin = useCallback(async (credentials) => {
+    try {
+      const response = await fetch(SummaryApi.signIn.url, {
+        method: SummaryApi.signIn.method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      });
+  
+      const result = await response.json();
+  
+      console.log("API Response:", result); // Log the response to check its structure
+  
+      if (result.success) {
+        if (!toast.isActive(result.message)) { // Prevent multiple toasts
           toast.success(result.message);
-
-          if (result.token && result.user) {
-            localStorage.setItem("token", result.token);
-            localStorage.setItem("userDetails", JSON.stringify(result.user));
-            console.log("Stored Token:", localStorage.getItem("token")); // Check if token is stored
-            console.log(
-              "Stored User Details:",
-              localStorage.getItem("userDetails")
-            );
-            dispatch(setUserDetails(result.user));
-            navigate("/");
-            fetchUserDetails()
-            fetchUserAddToCart()
-          } else {
-            toast.error("Token or user details are missing in the response.");
-          }
-        } else {
-          toast.error(result.message);
         }
-      } catch (error) {
-        console.error("Login error:", error);
-        toast.error("Login failed. Please try again.");
+  
+        if (result.token && result.user) {
+          // Store token and user details in localStorage
+          localStorage.setItem("token", result.token);
+          localStorage.setItem("userDetails", JSON.stringify(result.user));
+  
+          console.log("Stored Token:", localStorage.getItem("token")); // Check if token is stored
+          console.log("Stored User Details:", localStorage.getItem("userDetails"));
+  
+          // Dispatch user details to Redux
+          dispatch(setUserDetails(result.user));
+  
+          // Navigate to the homepage or wherever appropriate
+          navigate("/");
+  
+          // Fetch user details and cart details after login
+          fetchUserDetails();
+          fetchUserAddToCart();
+        } else {
+          toast.error("Token or user details are missing in the response.");
+        }
+      } else {
+        toast.error(result.message);
       }
-    },
-    [dispatch, navigate]
-  );
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("Login failed. Please try again.");
+    }
+  }, [dispatch, navigate, fetchUserDetails, fetchUserAddToCart]);
+  
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();

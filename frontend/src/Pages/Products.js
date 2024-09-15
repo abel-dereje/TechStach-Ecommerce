@@ -3,7 +3,7 @@ import axios from 'axios';
 import Sidebar from './Sidebar';
 import { faPlus, faTrash, faEye, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SummaryApi from '../common/index';
 
 const Products = () => {
@@ -11,11 +11,14 @@ const Products = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, ] = useState(5); // Updated to 5 items per page
+  const [itemsPerPage, ] = useState(5); 
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        const token = localStorage.getItem('token');
         const { url, method } = SummaryApi.getProducts;
 
         if (method !== 'get') {
@@ -24,7 +27,10 @@ const Products = () => {
 
         const response = await axios({
           url,
-          method
+          method,
+          headers: {
+        'Authorization': `Bearer ${token}`
+      },
         });
 
         if (response.data.success && Array.isArray(response.data.data)) {
@@ -52,10 +58,9 @@ const Products = () => {
     console.log(`View product with id: ${id}`);
   };
 
-  const handleEdit = (id) => {
-    console.log(`Edit product with id: ${id}`);
-  };
-
+  const handleEdit = (productId) => {
+    // console.log(`Edit product with id: ${id}`);
+    navigate(`../${productId}`);  };
   // Pagination logic
   const indexOfLastProduct = currentPage * itemsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;

@@ -21,6 +21,9 @@ const countAddToCartProduct = require('../controllers/user/countAddToCartProduct
 const addToCartViewProduct = require('../controllers/user/addToCartViewProduct');
 const updateAddToCartProduct = require('../controllers/user/updateAddToCartProduct');
 const deleteAddToCartProduct = require('../controllers/user/deleteAddtoCartProduct');
+const updateProduct = require('../controllers/product/updateProduct');
+const getProductById = require('../controllers/product/getProductById.js');
+const singleUser = require('../controllers/user/singleUser');
 
 
 router.post('/register', userSignUp);
@@ -30,12 +33,14 @@ router.post('/logout', userLogout);
 
 ///admin panel 
 router.get("/all-user",authToken,allUsers)
-router.put("/update-user",authToken,updateUser)
+router.get("/single-user/:userId",authToken,singleUser)
+router.put("/update-user/:userId",authToken,updateUser)
 
 //product
 router.post("/upload-product",authToken,UploadProduct)
 router.get("/get-product",getProduct)
-router.put("/update-product",authToken,UploadProduct)
+router.get("/getProductById/:id",authToken,getProductById)
+router.put("/update-product/:id",authToken,updateProduct)
 router.get("/get-categoryProduct",getCategoryProduct)
 router.post("/category-product",getCategoryWiseProduct)
 router.post("/product-details",getProductDetails)

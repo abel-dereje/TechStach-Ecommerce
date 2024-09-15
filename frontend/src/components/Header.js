@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useContext, useCallback } from 'react';
-import {  Link, useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaRegCircleUser } from 'react-icons/fa6';
 import { FaShoppingCart } from 'react-icons/fa';
@@ -8,21 +8,22 @@ import { toast } from 'react-toastify';
 import SummaryApi from "../common";
 import { setUserDetails, clearUserDetails } from '../store/userSlice';
 import Logo from "./Logo";
-import Context from "../context"
-
+import Context from "../context";
 
 const Header = () => {
+  const { cartProductCount } = useContext(Context);
+  console.log('Cart Product Count in Header:', cartProductCount);
+
+
   const logoColor = "#009FBD";
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
-  const context = useContext(Context);
 
-  const searchInput = useLocation()
-  const URLSearch = new URLSearchParams(searchInput?.search)
-  const searchQuery = URLSearch.getAll("q")
-  const [search,setSearch] = useState(searchQuery)
-
+  const searchInput = useLocation();
+  const URLSearch = new URLSearchParams(searchInput?.search);
+  const searchQuery = URLSearch.getAll("q");
+  const [search, setSearch] = useState(searchQuery);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -34,7 +35,7 @@ const Header = () => {
           dispatch(setUserDetails(parsedUserDetails));
         } catch (error) {
           console.error('Error parsing user details from localStorage:', error);
-          localStorage.removeItem('userDetails'); // Clear corrupted data
+          localStorage.removeItem('userDetails');
         }
       }
     }
@@ -54,7 +55,7 @@ const Header = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('userDetails');
         dispatch(clearUserDetails());
-        navigate("/login");
+        navigate("/");
       } else {
         toast.error(data.message);
       }
@@ -64,16 +65,16 @@ const Header = () => {
     }
   }, [dispatch, navigate]);
 
-  const handleSearch = (e)=>{
-    const { value } = e.target
-    setSearch(value)
+  const handleSearch = (e) => {
+    const { value } = e.target;
+    setSearch(value);
 
-    if(value){
-      navigate(`/search?q=${value}`)
-    }else{
-      navigate("/search")
+    if (value) {
+      navigate(`/search?q=${value}`);
+    } else {
+      navigate("/search");
     }
-  }
+  };
 
   return (
     <header className="bg-white shadow-md">
@@ -88,7 +89,9 @@ const Header = () => {
           <input
             type="text"
             placeholder="Search product here..."
-            className="w-full px-4 py-2 text-gray-700 placeholder-gray-400 outline-none"  onChange={handleSearch} value={search}
+            className="w-full px-4 py-2 text-gray-700 placeholder-gray-400 outline-none"
+            onChange={handleSearch}
+            value={search}
           />
           <button
             className="text-lg min-w-[50px] h-10 bg-[#009FBD] flex items-center justify-center rounded-r-full text-white"
@@ -109,11 +112,11 @@ const Header = () => {
             className="text-2xl relative cursor-pointer flex items-center justify-center"
           >
             <FaShoppingCart />
-            <Link to ={ "/cart"} 
+            <Link to="/cart"
               style={{ backgroundColor: logoColor }}
               className="text-white w-5 h-5 rounded-full flex items-center justify-center absolute -top-2 -right-2"
             >
-              <p className="text-sm">{context?.cartProductCount}</p>
+              <p className="text-sm">{cartProductCount}</p>
             </Link>
           </div>
           <div>
@@ -143,7 +146,7 @@ const Header = () => {
             </li>
             <li>
               <Link
-                to="/wishlist"
+                to="/services"
                 className="font-bold text-gray-700 hover:text-[#009FBD] transition-colors duration-300"
               >
                 Services

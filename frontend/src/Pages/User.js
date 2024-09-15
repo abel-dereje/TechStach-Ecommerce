@@ -2,15 +2,18 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import SummaryApi from '../common';
 import axios from 'axios';
-import { faPlus, faTrash, faEye, faEdit, faToggleOn } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash, faEye, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 const User = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, ] = useState(5);
+
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -59,9 +62,9 @@ const User = () => {
     console.log(`View user with id: ${id}`);
   };
 
-  const handleEdit = (id) => {
-    console.log(`Edit user with id: ${id}`);
-  };
+  const handleEdit = (userId) => {
+    // console.log(`Edit user with id: ${id}`);
+    navigate(`../users/${userId}`);  };
 
   // Pagination logic
   const indexOfLastUser = currentPage * itemsPerPage;
@@ -92,7 +95,8 @@ const User = () => {
               <thead>
                 <tr>
                 <th className="px-4 py-2 text-left">No</th>
-                  <th className="px-4 py-2 text-left">First Name</th>
+                  <th className="px-4 py-2 text-left">Picture</th>
+                  <th className="px-4 py-2 text-left">Name</th>
                   <th className="px-4 py-2 text-left">Last Name</th>
                   <th className="px-4 py-2 text-left">Email</th>
                   <th className="px-4 py-2 text-left">Phone No</th>
@@ -107,17 +111,17 @@ const User = () => {
               {currentUsers.map((user, index) => (
                   <tr key={user._id} className="border-t">
                     <td className="px-4 py-2">{indexOfFirstUser + index + 1}</td>
-                    {/* <td className="px-4 py-2">
-                      {product.productImage.length > 0 ? (
+                    <td className="px-4 py-2">
+                      {user.profilePic ? (
                         <img
-                          src={product.productImage[0]}
-                          alt={product.productName}
-                          className="w-12 h-12 object-cover" // Minimized image size
+                          src={user.profilePic}
+                          alt={`${user.firstName} ${user.lastName}`}
+                          className="w-12 h-12 object-cover rounded-full" // Minimized image size with rounded corners
                         />
                       ) : (
                         'No Image'
                       )}
-                    </td> */}
+                    </td>
                     <td className="px-4 py-2">{user.firstName}</td>
                     <td className="px-4 py-2">{user.lastName}</td>
                     <td className="px-4 py-2">{user.email}</td>
@@ -126,9 +130,6 @@ const User = () => {
                     {/* <td className="px-4 py-2">{user.status}</td> */}
                     <td className="px-4 py-2">{new Date(user.createdAt).toLocaleDateString()}</td>
                     <td className="px-4 py-2 flex space-x-2">
-                      <button onClick={() => handleActive(user._id)} className="text-green-500 hover:text-blue-700">
-                        <FontAwesomeIcon icon={faToggleOn} />
-                      </button>
                       <button onClick={() => handleView(user._id)} className="text-blue-500 hover:text-blue-700">
                         <FontAwesomeIcon icon={faEye} />
                       </button>
