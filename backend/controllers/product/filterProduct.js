@@ -1,3 +1,4 @@
+// This is filter page
 const productModel = require("../../models/productModel")
 
 const filterProduct = async(req,res)=>{
